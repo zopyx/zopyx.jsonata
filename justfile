@@ -17,3 +17,6 @@ wheel: venv
 test-python: build
     UV_CACHE_DIR=/tmp/uv-cache uv pip install --python .venv/bin/python pytest
     .venv/bin/python -m pytest
+
+publish: wheel
+    UV_CACHE_DIR=/tmp/uv-cache uv publish dist/*
