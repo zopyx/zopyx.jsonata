@@ -1,0 +1,23 @@
+[build-system]
+requires = ["maturin>=1.6,<2"]
+build-backend = "maturin"
+
+[project]
+name = "zopyx.pyjsonata"
+version = "0.3.4"
+description = "Python bindings for jsonata-rs"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [
+  { name = "ZOPYX" }
+]
+
+[project.urls]
+Homepage = "https://github.com/Stedi/jsonata-rs/"
+Repository = "https://github.com/Stedi/jsonata-rs/"
+
+[tool.maturin]
+features = ["python"]
+module-name = "zopyx.pyjsonata._native"
+python-source = "python"

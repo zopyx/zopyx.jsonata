@@ -17,6 +17,9 @@ use parser::ast::Ast;
 
 pub type Result<T> = std::result::Result<T, Error>;
 
+#[cfg(feature = "python")]
+mod python;
+
 pub struct JsonAta<'a> {
     ast: Ast,
     frame: Frame<'a>,
@@ -92,6 +95,28 @@ impl<'a> JsonAta<'a> {
         self.evaluate_timeboxed(input, None, None)
     }
 
+    pub fn evaluate_json(
+        &self,
+        input: Option<&serde_json::Value>,
+        bindings: Option<&HashMap<&str, &serde_json::Value>>,
+        max_depth: Option<usize>,
+        time_limit: Option<usize>,
+    ) -> Result<&'a Value<'a>> {
+        if let Some(bindings) = bindings {
+            for (key, json_value) in bindings.iter() {
+                let value = self.json_value_to_value(json_value);
+                self.assign_var(key, value);
+            }
+        };
+
+        let input = match input {
+            Some(input) => self.json_value_to_value(input),
+            None => Value::undefined(),
+        };
+
+        self.evaluate_with_value(input, max_depth, time_limit)
+    }
+
     pub fn evaluate_timeboxed(
         &self,
         input: Option<&str>,
@@ -107,6 +132,15 @@ impl<'a> JsonAta<'a> {
             None => Value::undefined(),
         };
 
+        self.evaluate_with_value(input, max_depth, time_limit)
+    }
+
+    fn evaluate_with_value(
+        &self,
+        input: &'a Value<'a>,
+        max_depth: Option<usize>,
+        time_limit: Option<usize>,
+    ) -> Result<&'a Value<'a>> {
         // If the input is an array, wrap it in an array so that it gets treated as a single input
         let input = if input.is_array() {
             Value::wrap_in_array(self.arena, input, ArrayFlags::WRAPPED)
