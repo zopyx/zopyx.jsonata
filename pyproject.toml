@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "zopyx.pyjsonata"
-version = "0.3.6"
+version = "0.3.7"
 description = "Python bindings for jsonata-rs"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
