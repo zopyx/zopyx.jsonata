@@ -95,6 +95,44 @@ ARGS:
     <input>    JSON input
 ```
 
+## Python bindings (zopyx.pyjsonata)
+
+The repository includes Python bindings built with PyO3 and maturin.
+
+### Build and install (local)
+
+```
+UV_CACHE_DIR=/tmp/uv-cache uv venv .venv --python 3.13 --clear
+UV_CACHE_DIR=/tmp/uv-cache uv pip install --python .venv/bin/python maturin
+UV_CACHE_DIR=/tmp/uv-cache .venv/bin/python -m maturin develop --features python
+```
+
+### Usage
+
+```python
+from zopyx.pyjsonata import evaluate, UNDEFINED, Jsonata
+
+# Simple evaluation
+print(evaluate("1 + 1"))  # 2
+
+# With input data
+data = {"name": "world"}
+print(evaluate('"Hello, " & name & "!"', data))  # "Hello, world!"
+
+# Optional bindings
+bindings = {"x": 2, "y": 3}
+print(evaluate("$x + $y", UNDEFINED, bindings))  # 5
+
+# Reuse a compiled expression
+expr = Jsonata("$sum([1,2,3])")
+print(expr.evaluate())  # 6
+```
+
+### Notes
+
+- `UNDEFINED` represents a missing input (distinct from `None`, which maps to JSON `null`).
+- Errors raise `ValueError` with a JSONata error code prefix (for example, `T0410`).
+
 ## Missing (but planned) features
 
 There are several JSONata features which are not yet implemented:
