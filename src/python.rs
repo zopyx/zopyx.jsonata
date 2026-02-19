@@ -81,7 +81,12 @@ impl Jsonata {
             }
         };
 
-        let result = jsonata.evaluate_json(input_value.as_ref(), bindings_ref.as_ref(), max_depth, time_limit);
+        let result = jsonata.evaluate_json(
+            input_value.as_ref(),
+            bindings_ref.as_ref(),
+            max_depth,
+            time_limit,
+        );
         let value = result.map_err(to_py_err)?;
         value_to_py(py, value)
     }
@@ -93,9 +98,7 @@ fn _native(py: Python<'_>, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<UndefinedType>()?;
 
     let undefined = Py::new(py, UndefinedType)?;
-    UNDEFINED_SINGLETON
-        .set(py, undefined.clone_ref(py))
-        .ok();
+    UNDEFINED_SINGLETON.set(py, undefined.clone_ref(py)).ok();
     m.add("UNDEFINED", undefined)?;
 
     Ok(())
