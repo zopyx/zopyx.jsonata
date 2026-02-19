@@ -13,12 +13,12 @@ build: venv
 	UV_CACHE_DIR=$(UV_CACHE_DIR) $(PYTHON_BIN) -m maturin develop --features python
 
 wheel: venv
-	UV_CACHE_DIR=$(UV_CACHE_DIR) uv pip install --python $(PYTHON_BIN) maturin
-	UV_CACHE_DIR=$(UV_CACHE_DIR) $(PYTHON_BIN) -m maturin build --release --features python --compatibility manylinux_2_28 --interpreter python3.13
+	UV_CACHE_DIR=$(UV_CACHE_DIR) uv pip install --python $(PYTHON_BIN) "maturin[zig]"
+	UV_CACHE_DIR=$(UV_CACHE_DIR) $(PYTHON_BIN) -m maturin build --release --features python --compatibility manylinux_2_28 --interpreter python3.11 python3.12 python3.13 --zig --auditwheel=repair
 
 test-python: build
 	UV_CACHE_DIR=$(UV_CACHE_DIR) uv pip install --python $(PYTHON_BIN) pytest
 	$(PYTHON_BIN) -m pytest
 
 publish: wheel
-	UV_CACHE_DIR=$(UV_CACHE_DIR) uv publish dist/*
+	UV_CACHE_DIR=$(UV_CACHE_DIR) uv publish target/wheels/* -u __token__
