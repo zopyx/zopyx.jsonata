@@ -12,6 +12,9 @@ license = { text = "Apache-2.0" }
 authors = [
   { name = "ZOPYX" }
 ]
+maintainers = [
+  { name = "Andreas Jung", email = "info@zopyx.com" }
+]
 
 [project.urls]
 Homepage = "https://github.com/Stedi/jsonata-rs/"
