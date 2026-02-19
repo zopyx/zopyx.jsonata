@@ -36,6 +36,7 @@ impl Jsonata {
     }
 
     #[pyo3(signature = (input=None, bindings=None, max_depth=None, time_limit=None))]
+    #[allow(clippy::useless_conversion)]
     fn evaluate<'py>(
         &self,
         py: Python<'py>,
